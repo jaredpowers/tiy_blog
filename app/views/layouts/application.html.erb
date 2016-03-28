@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>My Awesome Page!</title>
-    <link media="screen" rel="stylesheet" href="/assets/stylesheets/application.css"  />
-  </head>
-  <body>
-    <!-- Ruby will place one of my templates inside of this file, right here where I call "yield"  -->
-    <%= yield %>
-  </body>
+ <head>
+   <title>The Best Blog</title>
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
+   <link rel="stylesheet" type="text/css" href="/assets/stylesheets/application.css">
+ </head>
+ <body>
+   <section>
+      <%= yield %>
+   </section>
+
+   <footer>
+     <p>A product of JP Technologies</p>
+   </footer>
+ </body>
 </html>
