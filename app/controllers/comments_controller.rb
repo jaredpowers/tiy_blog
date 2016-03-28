@@ -1,73 +1,61 @@
 class CommentsController < ApplicationController
-  def index #GET
-    if request[:format] == "json"
-      render App.comments.to_json, status: "200 OK"
-    else
-      @comments = App.comments
-      render_template 'comments/index.html.erb'
-    end
+  def index
+    @comments = App.comments
+    render_template 'comments/index.html.erb'
   end
 
-  def show #GET
-    comments = find_comments_by_id
+  def show
+    comment = find_comment_by_id
 
-    if comments
-      if request[:format] == "json"
-        render comments.to_json
-      else
-        @comments = comments
-        render_template 'comments/show.html.erb'
-      end
+    if comment
+      @comment = comment
+      render_template 'comments/show.html.erb'
     else
       render_not_found
     end
   end
-
-  # new
 
   def new
     render_template 'comments/new.html.erb'
   end
 
-  def create #POST
-    last_comments = App.comments.max_by { |comments| comments.id }
-    new_id = last_comments.id + 1
+  def create
+    last_comment = App.comments.max_by { |comment| comment.comment_id }
+    new_id = last_comment.comment_id + 1
 
     App.comments.push(
-      comments.new(new_id, params["name"], params["age"])
+      Comment.new(new_id, params[:message], params[:author], params[:post_id])
     )
-    puts App.comments.to_json
-
-    render({ message: "Successfully created!", id: new_id }.to_json)
+    redirect_to "/comments"
   end
 
-  # edit
-
-  def update #PUT
-    comments = find_comments_by_id
-
-    if comments
-      unless params["name"].nil? || params["name"].empty?
-        comments.name = params["name"]
+  def update
+    comment = find_comment_by_id
+    if comment
+      unless params["message"].nil? || params["message"].empty?
+        comment.message = params["message"]
       end
 
-      unless params["age"].nil? || params["age"].empty?
-        comments.age = params["age"]
+      unless params["author"].nil? || params["author"].empty?
+        comment.author = params["author"]
       end
 
-      # In rails you will need to call save here
-      render comments.to_json, status: "200 OK"
+      unless params["post_id"].nil? || params["post_id"].empty?
+        comment.post_id = params["post_id"]
+      end
+
+      redirect_to "comments/show.html.erb"
     else
       render_not_found
     end
   end
 
-  def destroy #DELETE
-    comments = find_comments_by_id
+  def destroy
+    comment = find_comment_by_id
 
-    if comments
-      App.comments.delete(comments) # destroy it 🔥
-      render({ message: "Successfully Deleted comments" }.to_json)
+    if comment
+      App.comments.delete(comment)
+      redirect_to "/comments"
     else
       render_not_found
     end
@@ -75,16 +63,12 @@ class CommentsController < ApplicationController
 
   private
 
-  def find_comments_by_id
-    App.comments.find { |u| u.id == params[:id].to_i }
+  def find_comment_by_id
+    App.comments.find { |c| c.comment_id == params[:id].to_i }
   end
 
   def render_not_found
-    return_message = {
-      message: "comments not found!",
-      status: '404'
-    }.to_json
+    render_template "comments/notfound.html.erb"
 
-    render return_message, status: "404 NOT FOUND"
   end
 end

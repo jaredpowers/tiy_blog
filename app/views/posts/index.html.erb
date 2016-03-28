@@ -1,1 +1,9 @@
-<h1> I am a Post! </h1>
+<h1 class="post_index_header"> All Blog Posts</h1>
+
+<ul class="post_index">
+  <% @posts.each do |post| %>
+    <a href="/posts/<%= post.id %>"><li class="post_title"><%= post.title %></li></a>
+    <li><%= post.author %></li>
+    <li><%= post.body %></li>
+  <% end %>
+</ul>

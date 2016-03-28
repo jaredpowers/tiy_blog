@@ -11,24 +11,26 @@ require_relative '../lib/all'
 
 module App
   # Place all data here inside of a method
-  def App.tweets
+  def App.posts
     # This is an example
-    @all_tweets ||= [
-      { message: "cool tweet!", id: 1},
-      { message: "badd tweet!", id: 2},
-      { message: "ohno tweet!", id: 3},
-      { message: "eehhh tweet", id: 4},
+    @all_posts ||= [
+      (Post.new(1, "First day of school", "Jared Powers", "Today was the first day of school. It went really well. My classmates are great")),
+      (Post.new(2, "Second day of school", "Jared Powers", "Today was the second day of class. That is all.")),
+      (Post.new(3, "Third day of school", "Jared Powers", "Today is the third day of class. It is starting to get hard")),
+      (Post.new(4, "Fourth day of school", "Jared Powers", "Today is the fourth day of class. It is just getting harder and harder.")),
+      (Post.new(5, "Fifth day of school", "Jared Powers", "Today is the fifth day of class. This is my nightmare."))
     ]
   end
-
-  def App.posts
-    @all_posts ||= [
-
+  def App.comments
+    @all_pcomments ||= [
+      (Comment.new(1, "Have fun on your first day!", "Anita Hebert", 1)),
+      (Comment.new(2, "You can do it!!", "Hugh Devore", 2)),
+      (Comment.new(3, "Never Surrender!!", "Old Ironsides", 2)),
+      (Comment.new(4, "Grab me a reese's on your way home", "Colin Stadler", 4)),
+      (Comment.new(5, "RUBY RUBY RUBY!!!", "Justin Herrick", 5))
     ]
   end
 end
-
-App.posts << Post.new(1, "Post Title", "Jared", "Body of Post")
 
 system('clear')
 

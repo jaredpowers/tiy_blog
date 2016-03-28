@@ -1,61 +1,70 @@
 class PostsController < ApplicationController
 
-  def index #GET
-      # @posts = App.posts
-      render_template 'posts/index.html.erb'
+  def index
+    @posts = App.posts
+    render_template 'posts/index.html.erb'
   end
 
-  def show #GET
+  def show
     post = find_post_by_id
 
-    if
+    if post
       @post = post
+      @comments = App.comments.select { |comment| comment.post_id == post.id }
       render_template 'posts/show.html.erb'
     else
       render_not_found
     end
   end
 
-  # new
-
   def new
     render_template 'posts/new.html.erb'
   end
 
-  def create #POST
+  def create
     last_post = App.posts.max_by { |post| post.id }
     new_id = last_post.id + 1
 
     App.posts.push(
-      post.new(new_id, params["title"], params["author"], params["body"])
+      Post.new(new_id, params[:title], params[:author], params[:body], true)
     )
+    redirect_to "/posts"
+
   end
 
-  # edit
+  def edit
+    @post = find_post_by_id
 
-  def update #PUT
+    render_template "posts/edit.html.erb"
+  end
+
+  def update
     post = find_post_by_id
-
     if post
-      unless params["name"].nil? || params["name"].empty?
-        post.name = params["name"]
+      unless params[:title].nil? || params[:title].empty?
+        post.title = params[:title]
       end
 
-      unless params["age"].nil? || params["age"].empty?
-        post.age = params["age"]
+      unless params[:author].nil? || params[:author].empty?
+        post.author = params[:author]
       end
 
-      # In rails you will need to call save here
+      unless params[:body].nil? || params[:body].empty?
+        post.body = params[:body]
+      end
+
+      redirect_to "/posts"
     else
       render_not_found
     end
   end
 
-  def destroy #DELETE
+  def destroy
     post = find_post_by_id
 
     if post
-      App.posts.delete(post) # destroy it 🔥
+      App.posts.delete(post)
+      redirect_to "/posts"
     else
       render_not_found
     end
@@ -64,15 +73,10 @@ class PostsController < ApplicationController
   private
 
   def find_post_by_id
-    App.posts.find { |u| u.id == params[:id].to_i }
+    App.posts.find { |p| p.id == params[:id].to_i }
   end
 
   def render_not_found
-    return_message = {
-      message: "User not found!",
-      status: '404'
-    }.to_json
-
-    render return_message, status: "404 NOT FOUND"
+    render_template "posts/notfound.html.erb"
   end
 end
