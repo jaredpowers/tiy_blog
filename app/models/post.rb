@@ -1,16 +1,12 @@
 class Post
   attr_accessor :id, :title, :author, :body, :published
 
-  def initialize(id, title, author, body, published)
+  def initialize(id, title, author, body)
     @id = id
     @title = title
     @author = author
     @body = body
-    @published = published
-  end
-
-  def published
-    @published == false
+    @published = false
   end
 
   def to_json(_ = nil)

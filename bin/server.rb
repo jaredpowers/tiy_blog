@@ -20,7 +20,15 @@ module App
       { message: "eehhh tweet", id: 4},
     ]
   end
+
+  def App.posts
+    @all_posts ||= [
+
+    ]
+  end
 end
+
+App.posts << Post.new(1, "Post Title", "Jared", "Body of Post")
 
 system('clear')
 

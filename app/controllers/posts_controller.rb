@@ -1,7 +1,7 @@
 class PostsController < ApplicationController
 
   def index #GET
-      @post = App.posts
+      # @posts = App.posts
       render_template 'posts/index.html.erb'
   end
 
@@ -27,11 +27,8 @@ class PostsController < ApplicationController
     new_id = last_post.id + 1
 
     App.posts.push(
-      post.new(new_id, params["name"], params["age"])
+      post.new(new_id, params["title"], params["author"], params["body"])
     )
-    puts App.posts.to_json
-
-    render({ message: "Successfully created!", id: new_id }.to_json)
   end
 
   # edit
@@ -49,7 +46,6 @@ class PostsController < ApplicationController
       end
 
       # In rails you will need to call save here
-      render post.to_json, status: "200 OK"
     else
       render_not_found
     end
@@ -60,7 +56,6 @@ class PostsController < ApplicationController
 
     if post
       App.posts.delete(post) # destroy it 🔥
-      render({ message: "Successfully Deleted post" }.to_json)
     else
       render_not_found
     end
